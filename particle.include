@@ -1,0 +1,6 @@
+fermenticle.ino
+app/**/*.cpp
+app/**/*.h
+lib/**/*.cpp
+lib/**/*.h
+lib/**/*.c
