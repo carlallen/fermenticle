@@ -7,6 +7,12 @@
 
 Screen *main_screen;
 
+void tempControlLoop() {
+  tempControl.updateSensors();
+}
+
+Timer tempControlTimer(5000, tempControlLoop);
+
 void setup(void) {
   main_screen = new HomeScreen();
   init_tft();
@@ -19,11 +25,15 @@ void setup(void) {
   ow->search(addr);
   tempControl.setBeerAddress(addr);
   tempControl.init();
+  tempControlTimer.start();
 }
 
 void loop(void) {
   main_screen->update();
   // Serial.println(rawTempToFString(tempControl.beerTemp()));
-  tempControl.updateSensors();
   delay(1000);
 }
+
+
+
+

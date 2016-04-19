@@ -32,4 +32,14 @@ void TempControl::setBeerAddress(OneWireAddress address) {
   beerSensor->setAddress(address);
 }
 
+void TempControl::setFridgeAddress(OneWireAddress address) {
+  fridgeSensor->setAddress(address);
+}
+bool TempControl::beerSensorConnected() {
+  return beerSensor->connected();
+}
+bool TempControl::fridgeSensorConnected() {
+  return fridgeSensor->connected();
+}
+
 TempControl tempControl;

@@ -7,8 +7,8 @@ HomeScreen::HomeScreen() : init_complete(false) {
   cool = new HomeWidget(82, 166, ILI9341_BLUE);
   wifi = new HomeWidget(164, 166, ILI9341_GREEN);
   settings = new HomeWidget(246, 166, ILI9341_OLIVE);
-  temp2 = new HomeWidget(246, 83, ILI9341_MAROON);
-  temp1 = new HomeWidget(246, 0, ILI9341_YELLOW);
+  fridgeSensor = new HomeWidget(246, 83, ILI9341_MAROON);
+  beerSensor = new HomeWidget(246, 0, ILI9341_YELLOW);
 }
 
 void HomeScreen::init() {
@@ -25,10 +25,10 @@ void HomeScreen::update() {
   if (!init_complete)
     init();
   heat->update(true);
-  temp1->update(true);
-  settings->update(true);
   cool->update(true);
-  temp2->update(true);
+  beerSensor->update(tempControl.beerSensorConnected());
+  fridgeSensor->update(tempControl.fridgeSensorConnected());
+  settings->update(true);
   wifi->update(true);
 
   tft.setCursor(10, 10);

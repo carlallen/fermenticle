@@ -1,0 +1,6 @@
+(fp_lib_table
+  (lib (name 1wire)(type Legacy)(uri "$(KIPRJMOD)/lib/1wire.mod")(options "")(descr ""))
+  (lib (name particle-boards)(type Legacy)(uri "$(KIPRJMOD)/lib/particle-boards.mod")(options "")(descr ""))
+  (lib (name SparkFun)(type Legacy)(uri "$(KIPRJMOD)/lib/SparkFun.mod")(options "")(descr ""))
+  (lib (name w_conn_screw)(type Legacy)(uri "$(KIPRJMOD)/lib/w_conn_screw.mod")(options "")(descr ""))
+)

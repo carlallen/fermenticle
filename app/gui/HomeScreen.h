@@ -14,8 +14,8 @@ private:
   bool init_complete;
   HomeWidget *heat;
   HomeWidget *cool;
-  HomeWidget *temp1;
-  HomeWidget *temp2;
+  HomeWidget *beerSensor;
+  HomeWidget *fridgeSensor;
   HomeWidget *settings;
   HomeWidget *wifi;
 };
