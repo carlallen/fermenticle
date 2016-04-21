@@ -1,11 +1,12 @@
 #pragma once
+#include <vector>
 #include "Screen.h"
 #include "HomeWidget.h"
 class HomeScreen : public Screen
 {
 public:
   HomeScreen();
-  ~HomeScreen() {};
+  ~HomeScreen();
 
   void init();
   Screen* touch();
@@ -18,4 +19,5 @@ private:
   HomeWidget *fridgeSensor;
   HomeWidget *settings;
   HomeWidget *wifi;
+  std::vector<HomeWidget*> widgets;
 };

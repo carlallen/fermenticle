@@ -4,14 +4,15 @@
 #include "GlobalOneWire.h"
 #include "OneWireAddress.h"
 #include "Temperature.h"
+#include "DeviceList.h"
 
 Screen *main_screen;
 
-void tempControlLoop() {
+void temperatureLoop() {
   tempControl.updateSensors();
 }
 
-Timer tempControlTimer(5000, tempControlLoop);
+Timer tempControlTimer(5000, temperatureLoop);
 
 void setup(void) {
   main_screen = new HomeScreen();
@@ -20,6 +21,7 @@ void setup(void) {
   Serial.begin(9600);
   main_screen->update();
   tempControl.init();
+
   OneWireAddress addr;
   ow->reset_search();
   ow->search(addr);
@@ -29,9 +31,9 @@ void setup(void) {
 }
 
 void loop(void) {
+  main_screen->touch();
   main_screen->update();
-  // Serial.println(rawTempToFString(tempControl.beerTemp()));
-  delay(1000);
+  delay(100);
 }
 
 

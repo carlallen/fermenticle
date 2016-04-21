@@ -1,35 +1,33 @@
 #pragma once
 #include "TFT.h"
+#include "Screen.h"
 #define HOME_WIDGET_WIDTH 74
 #define HOME_WIDGET_HEIGHT 74
+
+typedef bool (*WidgetActiveCallback)();
+typedef Screen* (*ScreenCallback)();
+
 class HomeWidget
 {
 public:
-  HomeWidget(int16_t x, int16_t y, int16_t activeColor): x(x), y(y), activeColor(activeColor), init_complete(false) {} ;
+  HomeWidget(int16_t x, int16_t y, int16_t activeColor, WidgetActiveCallback active, ScreenCallback nextScreen);
   ~HomeWidget() {};
-  void init() {
-    init_complete = true;
-    active = false;
-    tft.fillRect(x, y, HOME_WIDGET_WIDTH, HOME_WIDGET_HEIGHT, ILI9341_DARKGREY);
-  }
-  void update(bool active) {
-    if (!init_complete)
-      init();
+  void init();
+  void draw();
 
-    if (active != this->active) {
-      if (active) {
-        tft.fillRect(x, y, HOME_WIDGET_WIDTH, HOME_WIDGET_HEIGHT, activeColor);
-      } else {
-        tft.fillRect(x, y, HOME_WIDGET_WIDTH, HOME_WIDGET_HEIGHT, ILI9341_DARKGREY);
-      }
-    }
-    this->active = active;
-  }
+  void press(bool p);
+  bool contains(int16_t _x, int16_t _y);
+  bool isPressed();
+  bool justPressed();
+  bool justReleased();
+  ScreenCallback nextScreen;
 
 private:
-  bool active;
+  WidgetActiveCallback active;
+  bool last_active;
   bool init_complete;
-  int16_t x;
-  int16_t y;
+  int16_t _x;
+  int16_t _y;
   int16_t activeColor;
+  bool currstate, laststate;
 };
