@@ -1,12 +1,13 @@
-#include "TFT.h"
-#include "HomeScreen.h"
 #include "TempControl.h"
 #include "GlobalOneWire.h"
 #include "OneWireAddress.h"
 #include "Temperature.h"
 #include "DeviceList.h"
+#include "GUI.h"
+#include "TFT.h"
 
-Screen *main_screen;
+SYSTEM_MODE(SEMI_AUTOMATIC);
+bool SYSTEM_STARTED = false;
 
 void temperatureLoop() {
   tempControl.updateSensors();
@@ -14,25 +15,28 @@ void temperatureLoop() {
 
 Timer tempControlTimer(5000, temperatureLoop);
 
+
 void setup(void) {
-  main_screen = new HomeScreen();
   init_tft();
   Wire.begin();
   Serial.begin(9600);
-  main_screen->update();
   tempControl.init();
-
+  gui.splash();
   OneWireAddress addr;
   ow->reset_search();
   ow->search(addr);
   tempControl.setBeerAddress(addr);
   tempControl.init();
   tempControlTimer.start();
+  Particle.connect();
 }
 
 void loop(void) {
-  main_screen->touch();
-  main_screen->update();
+  if (!SYSTEM_STARTED)
+    waitFor(Particle.connected, 30000);
+  SYSTEM_STARTED = true;
+
+  gui.update();
   delay(100);
 }
 

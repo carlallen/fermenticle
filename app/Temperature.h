@@ -2,6 +2,7 @@
 #include "DallasTemperature.h"
 #include "application.h"
 
+
 static String disconnectedString() {
   return " --.-";
 }

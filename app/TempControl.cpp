@@ -3,6 +3,8 @@
 TempControl::TempControl() {
   beerSensor = new Sensor();
   fridgeSensor = new Sensor();
+  heater = new OutputDevice();
+  chiller = new OutputDevice();
 }
 
 TempControl::~TempControl() {
@@ -40,6 +42,22 @@ bool TempControl::beerSensorConnected() {
 }
 bool TempControl::fridgeSensorConnected() {
   return fridgeSensor->connected();
+}
+
+bool TempControl::heating() {
+  return heater->isOn();
+}
+
+bool TempControl::cooling() {
+  return chiller->isOn();
+}
+
+void TempControl::setHeater(HardwareDevice* device) {
+  heater->setPinNumber(((OutputPinDevice*)device)->pinNumber());
+}
+
+void TempControl::setChiller(HardwareDevice* device) {
+  chiller->setPinNumber(((OutputPinDevice*)device)->pinNumber());
 }
 
 TempControl tempControl;

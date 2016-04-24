@@ -9,15 +9,9 @@ public:
   ~HomeScreen();
 
   void init();
-  Screen* touch();
+  Screen* touch(int16_t x, int16_t y);
   void update();
 private:
-  bool init_complete;
-  HomeWidget *heat;
-  HomeWidget *cool;
-  HomeWidget *beerSensor;
-  HomeWidget *fridgeSensor;
-  HomeWidget *settings;
-  HomeWidget *wifi;
-  std::vector<HomeWidget*> widgets;
+  bool initialized;
+  std::vector<HomeWidget*> buttons;
 };
