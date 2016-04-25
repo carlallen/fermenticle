@@ -21,3 +21,11 @@ static String addressToString(OneWireAddress address) {
   }
   return addressString;
 }
+
+static bool addressesMatch(OneWireAddress address1, OneWireAddress address2) {
+  for(int i = 0; i < 8; i++) {
+    if (address1[i] != address2[i])
+      return false;
+  }
+  return true;
+}

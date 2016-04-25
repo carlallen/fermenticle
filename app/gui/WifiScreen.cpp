@@ -1,7 +1,7 @@
 #include "WifiScreen.h"
 #include "HomeScreen.h"
 
-WifiScreen::WifiScreen() {
+WifiScreen::WifiScreen() : ok_btn(110, 100, "OK") {
   touched = false;
   initialized = false;
   update_delay = 0;
@@ -41,16 +41,18 @@ void WifiScreen::update() {
   } else  {
     update_delay--;
   }
+  ok_btn.draw();
 }
 
 
 Screen* WifiScreen::touch(int16_t x, int16_t y) {
-  if (x >= 0 && y >= 0) {
-    touched = true;
+  if (ok_btn.contains(x, y)) {
+    ok_btn.press(true);
   } else {
-    if (touched)
-      return new HomeScreen();
+    ok_btn.press(false);
   }
+  if (ok_btn.justReleased())
+    return new HomeScreen();
 
   return NULL;
 }

@@ -9,23 +9,30 @@ static bool heatActive() { return tempControl.heating(); }
 static bool coolActive() { return tempControl.cooling(); }
 static bool wifiActive() { return WiFi.ready(); }
 static bool settingsActive() { return true; }
-static bool fridgeSensorActive() { return tempControl.fridgeSensorConnected(); }
-static bool beerSensorActive() { return tempControl.beerSensorConnected(); }
+static bool beerSensorActive() { return tempControl.beerSensor->connected(); }
+static bool fridgeSensorActive() { return tempControl.fridgeSensor->connected(); }
 
-void setHeater(HardwareDevice* device) {
-  tempControl.setHeater(device);
+static void setHeater(HardwareDevice* device) {
+  tempControl.heater->setPinNumber(((OutputPinDevice*)device)->pinNumber());
 }
 
-void setChiller(HardwareDevice* device) {
-  tempControl.setChiller(device);
+static void setChiller(HardwareDevice* device) {
+  tempControl.chiller->setPinNumber(((OutputPinDevice*)device)->pinNumber());
+}
+
+static void setBeerSensor(HardwareDevice* device) {
+  tempControl.beerSensor->setAddress(((OneWireTempDevice*)device)->address);
+}
+static void setFridgeSensor(HardwareDevice* device) {
+  tempControl.fridgeSensor->setAddress(((OneWireTempDevice*)device)->address);
 }
 
 static Screen* heatPressed() {
-  return new HardwareDeviceScreen("Heater", ILI9341_ORANGE, &deviceList.outputPins, setHeater);
+  return new HardwareDeviceScreen("Heater", HEATER_COLOR, &deviceList.outputPins, setHeater);
 }
 
 static Screen* coolPressed() {
-  return new HardwareDeviceScreen("Chiller", ILI9341_BLUE, &deviceList.outputPins, setChiller);
+  return new HardwareDeviceScreen("Chiller", CHILLER_COLOR, &deviceList.outputPins, setChiller);
 }
 
 static Screen* wifiPressed() {
@@ -36,32 +43,33 @@ static Screen* settingsPressed() {
   return NULL;
 }
 
-static Screen* fridgeSensorPressed() {
-  return NULL;
- // return new HardwareDeviceScreen("Chamber Temp", ILI9341_MAROON, &deviceList.tempDevices);
+static Screen* beerSensorPressed() {
+  return new HardwareDeviceScreen("Beer Temp", BEER_SENSOR_COLOR, &deviceList.tempDevices, setBeerSensor);
 }
 
-static Screen* beerSensorPressed() {
-  return NULL;
-  //return new HardwareDeviceScreen("Beer Temp", ILI9341_YELLOW, &deviceList.tempDevices);
+static Screen* fridgeSensorPressed() {
+ return new HardwareDeviceScreen("Chamber Temp", FRIDGE_SENSOR_COLOR, &deviceList.tempDevices, setFridgeSensor);
 }
 
 HomeScreen::HomeScreen() : initialized(false) {
-  buttons.push_back(new HomeWidget(0, 166, ILI9341_ORANGE, heatActive, heatPressed));
-  buttons.push_back(new HomeWidget(82, 166, ILI9341_BLUE, coolActive, coolPressed));
-  buttons.push_back(new HomeWidget(164, 166, ILI9341_GREEN, wifiActive, wifiPressed));
-  buttons.push_back(new HomeWidget(246, 166, ILI9341_OLIVE, settingsActive, settingsPressed));
-  buttons.push_back(new HomeWidget(246, 83, ILI9341_MAROON, fridgeSensorActive, fridgeSensorPressed));
-  buttons.push_back(new HomeWidget(246, 0, ILI9341_YELLOW, beerSensorActive, beerSensorPressed));
+  buttons.push_back(new HomeWidget(0, 166, HEATER_COLOR, heatActive, heatPressed));
+  buttons.push_back(new HomeWidget(82, 166, CHILLER_COLOR, coolActive, coolPressed));
+  buttons.push_back(new HomeWidget(164, 166, WIFI_COLOR, wifiActive, wifiPressed));
+  buttons.push_back(new HomeWidget(246, 166, SETTINGS_COLOR, settingsActive, settingsPressed));
+  buttons.push_back(new HomeWidget(246, 83, FRIDGE_SENSOR_COLOR, fridgeSensorActive, fridgeSensorPressed));
+  buttons.push_back(new HomeWidget(246, 0, BEER_SENSOR_COLOR, beerSensorActive, beerSensorPressed));
 }
 
 HomeScreen::~HomeScreen() {
+  for ( auto &button : buttons ) {
+    delete button;
+  }
   buttons.clear();
 }
 
 void HomeScreen::init() {
   tft.fillScreen(ILI9341_BLACK);
-  tft.fillRect(0, 0, 238, 157, ILI9341_GREENYELLOW);
+  tft.fillRect(0, 0, 238, 157, TEMP_PANEL_COLOR);
   initialized = true;
 }
 
@@ -87,14 +95,14 @@ void HomeScreen::update() {
   }
 
   tft.setCursor(10, 10);
-  tft.setTextColor(ILI9341_WHITE, ILI9341_GREENYELLOW);
+  tft.setTextColor(ILI9341_WHITE, TEMP_PANEL_COLOR);
   tft.setTextSize(6);
 
   tft.print(rawTempToFString(tempControl.beerTemp()));
 
   tft.setCursor(10, 90);
   tft.print(rawTempToFString(tempControl.fridgeTemp()));
-  tft.setTextColor(ILI9341_DARKGREY, ILI9341_GREENYELLOW);
+  tft.setTextColor(ILI9341_DARKGREY, TEMP_PANEL_COLOR);
   tft.setTextSize(3);
   tft.setCursor(200,10);
   tft.print('F');

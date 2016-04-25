@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Screen.h"
+#include "TaskBarButton.h"
 class WifiScreen : public Screen
 {
 public:
@@ -13,4 +14,5 @@ protected:
   bool initialized;
   bool touched;
   uint8_t update_delay;
+  TaskBarButton ok_btn;
 };

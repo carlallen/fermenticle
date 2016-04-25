@@ -15,17 +15,11 @@ void temperatureLoop() {
 
 Timer tempControlTimer(5000, temperatureLoop);
 
-
 void setup(void) {
   init_tft();
+  gui.splash();
   Wire.begin();
   Serial.begin(9600);
-  tempControl.init();
-  gui.splash();
-  OneWireAddress addr;
-  ow->reset_search();
-  ow->search(addr);
-  tempControl.setBeerAddress(addr);
   tempControl.init();
   tempControlTimer.start();
   Particle.connect();

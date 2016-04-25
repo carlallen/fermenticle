@@ -1,7 +1,9 @@
 #include "Sensor.h"
 #include "GlobalOneWire.h"
 
-Sensor::Sensor() : deviceConnected(false), sample(DEVICE_DISCONNECTED_RAW) {}
+Sensor::Sensor() : deviceConnected(false), sample(DEVICE_DISCONNECTED_RAW) {
+  clearAddress();
+}
 
 void Sensor::init() {
   requestTemperatures();
@@ -30,4 +32,10 @@ void Sensor::update() {
 void Sensor::requestTemperatures() {
   if (address)
     dallas->requestTemperaturesByAddress(address);
+}
+
+void Sensor::clearAddress() {
+  for(int i = 0; i < 8; i++) {
+    address[i] = 0;
+  }
 }

@@ -3,6 +3,7 @@
 #include <vector>
 #include "HardwareDeviceButton.h"
 #include "DeviceList.h"
+#include "TaskBarButton.h"
 
 class HardwareDeviceScreen : public Screen
 {
@@ -13,6 +14,8 @@ public:
   void update();
 protected:
   void init();
+  void clear();
+  void resetButtons();
   bool initialized;
   int16_t deviceColor;
   String name;
@@ -20,4 +23,5 @@ protected:
   std::vector<HardwareDevice*> *devices;
   std::vector<HardwareDeviceButton*> outputButtons;
   setHardwareCallback setHardware;
+  TaskBarButton ok_btn;
 };

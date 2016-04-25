@@ -10,7 +10,7 @@ HomeWidget::HomeWidget(int16_t x, int16_t y, int16_t activeColor,
 void HomeWidget::init() {
   initialized = true;
   last_active = false;
-  tft.fillRect(_x, _y, HOME_WIDGET_WIDTH, HOME_WIDGET_HEIGHT, ILI9341_DARKGREY);
+  tft.fillRect(_x, _y, HOME_WIDGET_WIDTH, HOME_WIDGET_HEIGHT, INACTIVE_COLOR);
 }
 
 
@@ -26,7 +26,7 @@ void HomeWidget::draw() {
     if (active()) {
       tft.fillRect(_x, _y, HOME_WIDGET_WIDTH, HOME_WIDGET_HEIGHT, activeColor);
     } else {
-      tft.fillRect(_x, _y, HOME_WIDGET_WIDTH, HOME_WIDGET_HEIGHT, ILI9341_DARKGREY);
+      tft.fillRect(_x, _y, HOME_WIDGET_WIDTH, HOME_WIDGET_HEIGHT, INACTIVE_COLOR);
     }
   }
   this->last_active = active();

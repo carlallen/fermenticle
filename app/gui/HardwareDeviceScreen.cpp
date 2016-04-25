@@ -1,7 +1,9 @@
 #include "HardwareDeviceScreen.h"
 #include "HomeScreen.h"
 
-HardwareDeviceScreen::HardwareDeviceScreen(String name, int16_t deviceColor, std::vector<HardwareDevice*> *devices, setHardwareCallback setHardware) {
+HardwareDeviceScreen::HardwareDeviceScreen(String name, int16_t deviceColor,
+                                           std::vector<HardwareDevice*> *devices,
+                                           setHardwareCallback setHardware) : ok_btn(110, 100, "OK") {
   this->name = name;
   this->deviceColor = deviceColor;
   touched = false;
@@ -12,11 +14,17 @@ HardwareDeviceScreen::HardwareDeviceScreen(String name, int16_t deviceColor, std
 }
 
 HardwareDeviceScreen::~HardwareDeviceScreen() {
+  clear();
+}
+
+void HardwareDeviceScreen::clear() {
+  for ( auto &button : outputButtons ) {
+    delete button;
+  }
   outputButtons.clear();
 }
 
 void HardwareDeviceScreen::init() {
-  outputButtons.clear();
   std::vector<HardwareDevice*>::iterator d_iter = devices->begin();
   int16_t x_pos = 0;
   int16_t y_pos = 40;
@@ -46,9 +54,19 @@ Screen* HardwareDeviceScreen::touch(int16_t x, int16_t y) {
     } else {
       button->press(false);
     }
-    if (button->justReleased())
-      return button->nextScreen();
+    if (button->justReleased()) {
+      button->select();
+      resetButtons();
+    }
   }
+  if (ok_btn.contains(x, y)) {
+    ok_btn.press(true);
+  } else {
+    ok_btn.press(false);
+  }
+  if (ok_btn.justReleased())
+    return new HomeScreen();
+
   return NULL;
 }
 
@@ -57,5 +75,13 @@ void HardwareDeviceScreen::update() {
     init();
   for ( auto &button : outputButtons ) {
     button->draw();
+  }
+  ok_btn.draw();
+}
+
+void HardwareDeviceScreen::resetButtons() {
+  deviceList.refreshDeviceConnections();
+  for ( auto &button : outputButtons ) {
+    button->init();
   }
 }

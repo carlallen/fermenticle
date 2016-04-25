@@ -7,10 +7,9 @@ public:
     currstate = false;
     laststate = false;
   };
-  ~Touchable() {};
-  virtual void draw();
-
-  virtual bool contains(int16_t _x, int16_t _y);
+  virtual ~Touchable() {};
+  virtual void draw() = 0;
+  virtual bool contains(int16_t x, int16_t y) = 0;
   void press(bool p) {
     laststate = currstate;
     currstate = p;

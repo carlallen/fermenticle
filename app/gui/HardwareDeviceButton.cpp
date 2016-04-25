@@ -21,12 +21,9 @@ void HardwareDeviceButton::init() {
   tft.fillRect(_x, _y, HARDWARE_BUTTON_WIDTH, HARDWARE_BUTTON_HEIGHT, background_color());
 }
 
-Screen* HardwareDeviceButton::nextScreen() {
+void HardwareDeviceButton::select() {
   if (device->canSelect()) {
     setHardware(device);
-    return new HomeScreen();
-  } else {
-    return NULL;
   }
 }
 
@@ -53,13 +50,7 @@ void HardwareDeviceButton::draw() {
 
 
 int16_t HardwareDeviceButton::background_color() {
-  if (device->canSelect()) {
-    if (isPressed()) {
-      return ILI9341_DARKGREY;
-    } else {
-      return ILI9341_GREENYELLOW;
-    }
-  } else {
-    return ILI9341_MAROON;
-  }
+  if (device->canSelect() && isPressed())
+    return ILI9341_BLACK;
+  return device->background_color();
 }

@@ -30,34 +30,12 @@ int16_t TempControl::fridgeTemp() {
   return fridgeSensor->temp();
 }
 
-void TempControl::setBeerAddress(OneWireAddress address) {
-  beerSensor->setAddress(address);
-}
-
-void TempControl::setFridgeAddress(OneWireAddress address) {
-  fridgeSensor->setAddress(address);
-}
-bool TempControl::beerSensorConnected() {
-  return beerSensor->connected();
-}
-bool TempControl::fridgeSensorConnected() {
-  return fridgeSensor->connected();
-}
-
 bool TempControl::heating() {
   return heater->isOn();
 }
 
 bool TempControl::cooling() {
   return chiller->isOn();
-}
-
-void TempControl::setHeater(HardwareDevice* device) {
-  heater->setPinNumber(((OutputPinDevice*)device)->pinNumber());
-}
-
-void TempControl::setChiller(HardwareDevice* device) {
-  chiller->setPinNumber(((OutputPinDevice*)device)->pinNumber());
 }
 
 TempControl tempControl;

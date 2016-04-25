@@ -10,8 +10,14 @@ DeviceList::~DeviceList() {
 }
 
 void DeviceList::clear() {
+  for ( auto &device : outputPins ) {
+    delete device;
+  }
+  for (auto &device : tempDevices) {
+    delete device;
+  }
   tempDevices.clear();
- outputPins.clear();
+  outputPins.clear();
 }
 
 void DeviceList::refreshDeviceList() {
@@ -21,21 +27,35 @@ void DeviceList::refreshDeviceList() {
   while(ow->search(address)) {
     tempDevices.push_back(new OneWireTempDevice(address));
   }
-  outputPins.push_back(new OutputPinDevice(A7, NONE, "DO0"));
-  outputPins.push_back(new OutputPinDevice(A0, NONE, "DO1"));
-  outputPins.push_back(new OutputPinDevice(A1, NONE, "DO2"));
-  outputPins.push_back(new OutputPinDevice(A6, NONE, "DO3"));
+  outputPins.push_back(new OutputPinDevice(A7, "DO0"));
+  outputPins.push_back(new OutputPinDevice(A6, "DO3"));
+  outputPins.push_back(new OutputPinDevice(A1, "DO2"));
+  outputPins.push_back(new OutputPinDevice(A0, "DO1"));
+  refreshDeviceConnections();
+}
+
+void DeviceList::refreshDeviceConnections() {
   markOutputPins();
+  markSensorDevices();
 }
 
 void DeviceList::markOutputPins() {
   for ( auto &device : outputPins ) {
-    if (((OutputPinDevice*)device)->pinNumber() == tempControl.heater->pinNumber()) {
+    ((OutputPinDevice*)device)->setOutputType(NO_OUTPUT);
+    if (((OutputPinDevice*)device)->pinNumber() == tempControl.heater->pinNumber())
       ((OutputPinDevice*)device)->setOutputType(HEAT);
-    }
-    if (((OutputPinDevice*)device)->pinNumber() == tempControl.chiller->pinNumber()) {
+    if (((OutputPinDevice*)device)->pinNumber() == tempControl.chiller->pinNumber())
       ((OutputPinDevice*)device)->setOutputType(COOL);
-    }
+  }
+}
+
+void DeviceList::markSensorDevices() {
+  for ( auto &device : tempDevices ) {
+    ((OneWireTempDevice*)device)->setSensorType(NO_SENSOR);
+    if (addressesMatch(((OneWireTempDevice*)device)->address, tempControl.beerSensor->address))
+      ((OneWireTempDevice*)device)->setSensorType(BEER);
+    if (addressesMatch(((OneWireTempDevice*)device)->address, tempControl.fridgeSensor->address))
+      ((OneWireTempDevice*)device)->setSensorType(FRIDGE);
   }
 }
 

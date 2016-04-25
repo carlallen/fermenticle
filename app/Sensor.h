@@ -12,8 +12,9 @@ public:
   void setAddress(OneWireAddress address);
   void update();
   void requestTemperatures();
+  OneWireAddress address;
 private:
   bool deviceConnected;
   int16_t sample;
-  OneWireAddress address;
+  void clearAddress();
 };

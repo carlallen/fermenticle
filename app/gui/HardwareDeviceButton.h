@@ -11,11 +11,11 @@ class HardwareDeviceButton : public Touchable
 {
 public:
   HardwareDeviceButton(int16_t x, int16_t y, HardwareDevice* device, setHardwareCallback setHardware);
-  ~HardwareDeviceButton();
+  ~HardwareDeviceButton() {}
   void init();
   void draw();
   bool contains(int16_t _x, int16_t _y);
-  Screen* nextScreen();
+  void select();
 protected:
   bool initialized;
   bool currstate, laststate;
