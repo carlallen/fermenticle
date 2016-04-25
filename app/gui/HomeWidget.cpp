@@ -2,38 +2,40 @@
 
 HomeWidget::HomeWidget(int16_t x, int16_t y, int16_t activeColor,
     WidgetActiveCallback active,
-    ScreenCallback nextScreen): _x(x), _y(y), activeColor(activeColor), initialized(false) {
+    ScreenCallback nextScreen) {
     this->active = active;
     this->_nextScreen = nextScreen;
+    this->activeColor = activeColor;
+    last_active = false;
+    initialized = false;
+    _x = x;
+    _y = y;
   }
-
-void HomeWidget::init() {
-  initialized = true;
-  last_active = false;
-  tft.fillRect(_x, _y, HOME_WIDGET_WIDTH, HOME_WIDGET_HEIGHT, INACTIVE_COLOR);
-}
-
 
 void HomeWidget::draw() {
-  if (!initialized)
-    init();
-
-  if (isPressed()) {
-    tft.fillRect(_x, _y, HOME_WIDGET_WIDTH, HOME_WIDGET_HEIGHT, ILI9341_BLACK);
-    return;
+  if (!initialized || justPressed() || justReleased() || last_active != active()) {
+    tft.fillRect(_x, _y, HOME_WIDGET_WIDTH, HOME_WIDGET_HEIGHT, backgroundColor());
+    initialized = true;
   }
-  if (active() != this->last_active || justReleased()) {
-    if (active()) {
-      tft.fillRect(_x, _y, HOME_WIDGET_WIDTH, HOME_WIDGET_HEIGHT, activeColor);
-    } else {
-      tft.fillRect(_x, _y, HOME_WIDGET_WIDTH, HOME_WIDGET_HEIGHT, INACTIVE_COLOR);
-    }
-  }
-  this->last_active = active();
+  last_active = active();
 }
 
 bool HomeWidget::contains(int16_t x, int16_t y) {
   if (x < _x || (x > (_x + HOME_WIDGET_WIDTH))) return false;
   if (y < _y || (y > (_y + HOME_WIDGET_HEIGHT))) return false;
   return true;
+}
+
+Screen* HomeWidget::nextScreen() {
+  return _nextScreen();
+}
+
+int16_t HomeWidget::backgroundColor() {
+  if (isPressed())
+    return ILI9341_BLACK;
+  if (active()) {
+    return activeColor;
+  } else {
+    return INACTIVE_COLOR;
+  }
 }

@@ -4,6 +4,7 @@
 #include "Temperature.h"
 #include "WifiScreen.h"
 #include "HardwareDeviceScreen.h"
+#include "EEPROM_Manager.h"
 
 static bool heatActive() { return tempControl.heating(); }
 static bool coolActive() { return tempControl.cooling(); }
@@ -14,17 +15,21 @@ static bool fridgeSensorActive() { return tempControl.fridgeSensor->connected();
 
 static void setHeater(HardwareDevice* device) {
   tempControl.heater->setPinNumber(((OutputPinDevice*)device)->pinNumber());
+  save_eeprom();
 }
 
 static void setChiller(HardwareDevice* device) {
   tempControl.chiller->setPinNumber(((OutputPinDevice*)device)->pinNumber());
+  save_eeprom();
 }
 
 static void setBeerSensor(HardwareDevice* device) {
   tempControl.beerSensor->setAddress(((OneWireTempDevice*)device)->address);
+  save_eeprom();
 }
 static void setFridgeSensor(HardwareDevice* device) {
   tempControl.fridgeSensor->setAddress(((OneWireTempDevice*)device)->address);
+  save_eeprom();
 }
 
 static Screen* heatPressed() {
@@ -93,15 +98,17 @@ void HomeScreen::update() {
   for ( auto &button : buttons ) {
     button->draw();
   }
-
-  tft.setCursor(10, 10);
   tft.setTextColor(ILI9341_WHITE, TEMP_PANEL_COLOR);
   tft.setTextSize(6);
 
-  tft.print(rawTempToFString(tempControl.beerTemp()));
+  String text = rawTempToFString(tempControl.beerTemp());
+  tft.setCursor(10 + (5-text.length())*36, 10);
+  tft.print(text);
 
-  tft.setCursor(10, 90);
-  tft.print(rawTempToFString(tempControl.fridgeTemp()));
+  text = rawTempToFString(tempControl.fridgeTemp());
+  tft.setCursor(10 + (5-text.length())*36, 90);
+  tft.print(text);
+
   tft.setTextColor(ILI9341_DARKGREY, TEMP_PANEL_COLOR);
   tft.setTextSize(3);
   tft.setCursor(200,10);

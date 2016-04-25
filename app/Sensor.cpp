@@ -9,7 +9,7 @@ void Sensor::init() {
   requestTemperatures();
 }
 
-int16_t Sensor::temp() {
+RawTemperature Sensor::temp() {
   if (connected()) {
     return sample;
   } else {

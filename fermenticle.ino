@@ -5,6 +5,7 @@
 #include "DeviceList.h"
 #include "GUI.h"
 #include "TFT.h"
+#include "EEPROM_Manager.h"
 
 SYSTEM_MODE(SEMI_AUTOMATIC);
 bool SYSTEM_STARTED = false;
@@ -16,6 +17,7 @@ void temperatureLoop() {
 Timer tempControlTimer(5000, temperatureLoop);
 
 void setup(void) {
+  init_eeprom();
   init_tft();
   gui.splash();
   Wire.begin();

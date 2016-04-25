@@ -13,12 +13,12 @@ class HomeWidget : public Touchable
 public:
   HomeWidget(int16_t x, int16_t y, int16_t activeColor, WidgetActiveCallback active, ScreenCallback nextScreen);
   ~HomeWidget() {};
-  void init();
   void draw();
   bool contains(int16_t _x, int16_t _y);
-  Screen* nextScreen() { return _nextScreen(); };
+  Screen* nextScreen();
 
 private:
+  int16_t backgroundColor();
   ScreenCallback _nextScreen;
   WidgetActiveCallback active;
   bool last_active;
