@@ -1,5 +1,6 @@
 #include "EEPROM_Manager.h"
-#include "TempControl.h"
+#include "OutputDeviceManager.h"
+#include "TempSensorManager.h"
 
 CONTROL_SETTINGS mainSettings;
 void init_eeprom() {
@@ -14,10 +15,10 @@ void save_eeprom() {
 }
 
 void populate_eeprom() {
-  memcpy(mainSettings.beer_addr, tempControl.beerSensor->address, 8);
-  memcpy(mainSettings.fridge_addr, tempControl.fridgeSensor->address, 8);
-  mainSettings.heat_pin = tempControl.heater->pinNumber();
-  mainSettings.cool_pin = tempControl.chiller->pinNumber();
+  memcpy(mainSettings.beer_addr, tempSensorMgr.beerSensor.address, 8);
+  memcpy(mainSettings.fridge_addr, tempSensorMgr.fridgeSensor.address, 8);
+  mainSettings.heat_pin = outputDeviceMgr.heater->pinNumber();
+  mainSettings.cool_pin = outputDeviceMgr.chiller->pinNumber();
 }
 
 void load_from_eeprom() {
@@ -25,12 +26,12 @@ void load_from_eeprom() {
     reset_eeprom();
     return;
   }
-  memcpy(tempControl.beerSensor->address, mainSettings.beer_addr, 8);
-  memcpy(tempControl.fridgeSensor->address, mainSettings.fridge_addr, 8);
+  memcpy(tempSensorMgr.beerSensor.address, mainSettings.beer_addr, 8);
+  memcpy(tempSensorMgr.fridgeSensor.address, mainSettings.fridge_addr, 8);
   if (mainSettings.heat_pin)
-    tempControl.heater->setPinNumber(mainSettings.heat_pin);
+    outputDeviceMgr.heater->setPinNumber(mainSettings.heat_pin);
   if (mainSettings.cool_pin)
-    tempControl.chiller->setPinNumber(mainSettings.cool_pin);
+    outputDeviceMgr.chiller->setPinNumber(mainSettings.cool_pin);
 }
 
 void reset_eeprom() {

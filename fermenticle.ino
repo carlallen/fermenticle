@@ -1,4 +1,5 @@
-#include "TempControl.h"
+#include "OutputDeviceManager.h"
+#include "TempSensorManager.h"
 #include "GlobalOneWire.h"
 #include "OneWireAddress.h"
 #include "Temperature.h"
@@ -10,11 +11,12 @@
 SYSTEM_MODE(SEMI_AUTOMATIC);
 bool SYSTEM_STARTED = false;
 
+// Loop for updating Temperature Sensors
 void temperatureLoop() {
-  tempControl.updateSensors();
+  tempSensorMgr.updateSensors();
 }
 
-Timer tempControlTimer(5000, temperatureLoop);
+Timer tempSensorTimer(1000, temperatureLoop);
 
 void setup(void) {
   init_eeprom();
@@ -22,8 +24,9 @@ void setup(void) {
   gui.splash();
   Wire.begin();
   Serial.begin(9600);
-  tempControl.init();
-  tempControlTimer.start();
+  tempSensorMgr.init();
+  outputDeviceMgr.init();
+  tempSensorTimer.start();
   Particle.connect();
 }
 

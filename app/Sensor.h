@@ -12,7 +12,6 @@ public:
   bool connected() { return deviceConnected; };
   void setAddress(OneWireAddress address);
   void update();
-  void requestTemperatures();
   OneWireAddress address;
 private:
   bool deviceConnected;

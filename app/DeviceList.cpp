@@ -1,6 +1,7 @@
 #include "DeviceList.h"
 #include "GlobalOneWire.h"
-#include "TempControl.h"
+#include "OutputDeviceManager.h"
+#include "TempSensorManager.h"
 
 DeviceList::DeviceList() {
 }
@@ -42,9 +43,9 @@ void DeviceList::refreshDeviceConnections() {
 void DeviceList::markOutputPins() {
   for ( auto &device : outputPins ) {
     ((OutputPinDevice*)device)->setOutputType(NO_OUTPUT);
-    if (((OutputPinDevice*)device)->pinNumber() == tempControl.heater->pinNumber())
+    if (((OutputPinDevice*)device)->pinNumber() == outputDeviceMgr.heater->pinNumber())
       ((OutputPinDevice*)device)->setOutputType(HEAT);
-    if (((OutputPinDevice*)device)->pinNumber() == tempControl.chiller->pinNumber())
+    if (((OutputPinDevice*)device)->pinNumber() == outputDeviceMgr.chiller->pinNumber())
       ((OutputPinDevice*)device)->setOutputType(COOL);
   }
 }
@@ -52,9 +53,9 @@ void DeviceList::markOutputPins() {
 void DeviceList::markSensorDevices() {
   for ( auto &device : tempDevices ) {
     ((OneWireTempDevice*)device)->setSensorType(NO_SENSOR);
-    if (addressesMatch(((OneWireTempDevice*)device)->address, tempControl.beerSensor->address))
+    if (addressesMatch(((OneWireTempDevice*)device)->address, tempSensorMgr.beerSensor.address))
       ((OneWireTempDevice*)device)->setSensorType(BEER);
-    if (addressesMatch(((OneWireTempDevice*)device)->address, tempControl.fridgeSensor->address))
+    if (addressesMatch(((OneWireTempDevice*)device)->address, tempSensorMgr.fridgeSensor.address))
       ((OneWireTempDevice*)device)->setSensorType(FRIDGE);
   }
 }

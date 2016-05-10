@@ -1,35 +1,26 @@
 #include "application.h"
 #include "HomeScreen.h"
-#include "TempControl.h"
-#include "Temperature.h"
+#include "OutputDeviceManager.h"
+#include "TempSensorManager.h"
 #include "WifiScreen.h"
 #include "HardwareDeviceScreen.h"
 #include "SetpointScreen.h"
 #include "EEPROM_Manager.h"
 
-static bool heatActive() { return tempControl.heating(); }
-static bool coolActive() { return tempControl.cooling(); }
+static bool heatActive() { return outputDeviceMgr.heating(); }
+static bool coolActive() { return outputDeviceMgr.cooling(); }
 static bool wifiActive() { return WiFi.ready(); }
 static bool settingsActive() { return true; }
-static bool beerSensorActive() { return tempControl.beerSensor->connected(); }
-static bool fridgeSensorActive() { return tempControl.fridgeSensor->connected(); }
+static bool beerSensorActive() { return tempSensorMgr.beerSensorConnected(); }
+static bool fridgeSensorActive() { return tempSensorMgr.fridgeSensorConnected(); }
 
 static void setHeater(HardwareDevice* device) {
-  tempControl.heater->setPinNumber(((OutputPinDevice*)device)->pinNumber());
+  outputDeviceMgr.heater->setPinNumber(((OutputPinDevice*)device)->pinNumber());
   save_eeprom();
 }
 
 static void setChiller(HardwareDevice* device) {
-  tempControl.chiller->setPinNumber(((OutputPinDevice*)device)->pinNumber());
-  save_eeprom();
-}
-
-static void setBeerSensor(HardwareDevice* device) {
-  tempControl.beerSensor->setAddress(((OneWireTempDevice*)device)->address);
-  save_eeprom();
-}
-static void setFridgeSensor(HardwareDevice* device) {
-  tempControl.fridgeSensor->setAddress(((OneWireTempDevice*)device)->address);
+  outputDeviceMgr.chiller->setPinNumber(((OutputPinDevice*)device)->pinNumber());
   save_eeprom();
 }
 
@@ -111,14 +102,14 @@ void HomeScreen::update() {
   tft.setTextColor(ILI9341_WHITE, TEMP_PANEL_COLOR);
   tft.setTextSize(6);
 
-  String text = rawTempToFString(tempControl.beerTemp());
+  String text = rawTempToFString(tempSensorMgr.beerTemp());
   for (int i = text.length(); i < 5; i++ ) {
     text = " " + text;
   }
   tft.setCursor(10, 10);
   tft.print(text);
 
-  text = rawTempToFString(tempControl.fridgeTemp());\
+  text = rawTempToFString(tempSensorMgr.fridgeTemp());
   for (int i = text.length(); i < 5; i++ ) {
     text = " " + text;
   }

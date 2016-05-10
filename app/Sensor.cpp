@@ -5,10 +5,6 @@ Sensor::Sensor() : deviceConnected(false), sample(DEVICE_DISCONNECTED_RAW) {
   clearAddress();
 }
 
-void Sensor::init() {
-  requestTemperatures();
-}
-
 RawTemperature Sensor::temp() {
   if (connected()) {
     return sample;
@@ -26,12 +22,6 @@ void Sensor::update() {
     deviceConnected = false;
   else
     deviceConnected = true;
-  requestTemperatures();
-}
-
-void Sensor::requestTemperatures() {
-  if (address)
-    dallas->requestTemperaturesByAddress(address);
 }
 
 void Sensor::clearAddress() {
