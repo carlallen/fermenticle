@@ -12,7 +12,6 @@ public:
 protected:
   void init();
   bool initialized;
-  bool touched;
   uint8_t update_delay;
   TaskBarButton ok_btn;
 };

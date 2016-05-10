@@ -2,7 +2,6 @@
 #include "HomeScreen.h"
 
 WifiScreen::WifiScreen() : ok_btn(110, 100, "OK") {
-  touched = false;
   initialized = false;
   update_delay = 0;
 }
