@@ -14,6 +14,7 @@ public:
   RawTemperature beerTemp();
   bool beerSensorConnected();
   bool fridgeSensorConnected();
+  bool ready();
   Sensor beerSensor;
   Sensor fridgeSensor;
 };

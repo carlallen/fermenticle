@@ -13,6 +13,21 @@ OutputDeviceManager::~OutputDeviceManager() {
 void OutputDeviceManager::init() {
 }
 
+void OutputDeviceManager::heat() {
+  heater->turnOn();
+  chiller->turnOff();
+}
+
+void OutputDeviceManager::cool() {
+  heater->turnOff();
+  chiller->turnOn();
+}
+
+void OutputDeviceManager::idle() {
+  heater->turnOff();
+  chiller->turnOff();
+}
+
 bool OutputDeviceManager::heating() {
   return heater->isOn();
 }

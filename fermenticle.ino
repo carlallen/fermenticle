@@ -1,5 +1,4 @@
-#include "OutputDeviceManager.h"
-#include "TempSensorManager.h"
+#include "TempController.h"
 #include "GlobalOneWire.h"
 #include "OneWireAddress.h"
 #include "Temperature.h"
@@ -16,7 +15,26 @@ void temperatureLoop() {
   tempSensorMgr.updateSensors();
 }
 
-Timer tempSensorTimer(1000, temperatureLoop);
+void peakLoop() {
+  tempController.updateFilteredTemperatures();
+  tempController.detectPeaks();
+  tempController.updateSettings();
+}
+
+void stateLoop() {
+  tempController.updateState();
+  tempController.logToSerial();
+  tempController.updateOutputs();
+}
+
+void slopeLoop() {
+  tempController.updateSlope();
+}
+
+Timer tempSensorTimer(5000, temperatureLoop);
+Timer peakTimer(10000, peakLoop);
+Timer stateTimer(1000, stateLoop);
+Timer slopeTimer(60000, slopeLoop);
 
 void setup(void) {
   init_eeprom();
@@ -24,10 +42,12 @@ void setup(void) {
   gui.splash();
   Wire.begin();
   Serial.begin(9600);
-  tempSensorMgr.init();
-  outputDeviceMgr.init();
-  tempSensorTimer.start();
+  tempController.init();
   Particle.connect();
+  tempSensorTimer.start();
+  peakTimer.start();
+  stateTimer.start();
+  slopeTimer.start();
 }
 
 void loop(void) {

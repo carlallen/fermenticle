@@ -21,11 +21,15 @@ RawTemperature TempSensorManager::beerTemp() {
 }
 
 bool TempSensorManager::beerSensorConnected() {
-  beerSensor.connected();
+  return beerSensor.connected();
 }
 
 bool TempSensorManager::fridgeSensorConnected() {
-  fridgeSensor.connected();
+  return fridgeSensor.connected();
+}
+
+bool TempSensorManager::ready() {
+  return fridgeSensorConnected() && beerSensorConnected();
 }
 
 TempSensorManager tempSensorMgr;

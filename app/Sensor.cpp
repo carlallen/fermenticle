@@ -1,7 +1,9 @@
 #include "Sensor.h"
 #include "GlobalOneWire.h"
 
-Sensor::Sensor() : deviceConnected(false), sample(DEVICE_DISCONNECTED_RAW) {
+Sensor::Sensor() {
+  deviceConnected = false;
+  sample = DEVICE_DISCONNECTED_RAW;
   clearAddress();
 }
 

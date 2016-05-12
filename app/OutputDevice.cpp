@@ -16,12 +16,14 @@ void OutputDevice::setPinNumber(uint8_t pinNumber) {
 
 void OutputDevice::turnOn() {
   if (configured) {
+    on = true;
     digitalWrite(_pinNumber, 1);
   }
 }
 
 void OutputDevice::turnOff() {
   if (configured) {
+    on = false;
     digitalWrite(_pinNumber, 0);
   }
 }
